@@ -58,6 +58,23 @@ app.post('/api/v1/tours', (req, res) => {
         }
     );
 });
+
+app.patch('/api/v1/tours/:id', (req, res) => {
+    const id = req.params.id * 1;
+    if (id > tours.length) {
+        return res.status(404).json({
+            status: 'Failed',
+            message: 'ID Not Found',
+        });
+    }
+
+    res.status(200).json({
+        status: 'Success',
+        data: {
+            tour: '<Updated Tour Here...>',
+        },
+    });
+});
 const port = 3000;
 app.listen(port, () => {
     console.log(`App is running on port ${port}`);
