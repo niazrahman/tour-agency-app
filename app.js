@@ -3,16 +3,15 @@ const express = require('express');
 
 const app = express();
 app.use(express.json());
-// app.get('/', (req, res) => {
-//     res.status(200).send('Hello from the server');
-// });
+app.use((req, res, next) => {
+    console.log('Hello from the middleware');
+    next();
+});
 
-// app.post('/', (req, res) => {
-//     res.status(200).json({
-//         message: 'You can post at the endPoint...',
-//         app: 'Node Project',
-//     });
-// });
+app.use((req, res, next) => {
+    req.requestTime = new Date().toString();
+    next();
+});
 const tours = JSON.parse(
     fs.readFileSync(`${__dirname}/starter/dev-data/data/tours-simple.json`)
 );
@@ -37,6 +36,7 @@ const getTour = (req, res) => {
     }
     res.status(200).json({
         status: 'success',
+        requestedAt: req.requestTime,
         data: {
             tour,
         },
@@ -95,6 +95,7 @@ const deleteTour = (req, res) => {
 
 //NOTE:  refactoring code
 app.route('/api/v1/tours').get(getAllTours).post(createTour);
+
 app.route('/api/v1/tours/:id')
     .get(getTour)
     .patch(updateTour)
