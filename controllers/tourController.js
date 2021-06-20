@@ -3,7 +3,17 @@ const fs = require('fs');
 const tours = JSON.parse(
     fs.readFileSync(`${__dirname}/../starter/dev-data/data/tours-simple.json`)
 );
-
+exports.checkId = (req, res, next, val) => {
+    console.log(`The tour id is ${val}`);
+    const id = req.params.id * 1;
+    if (id > tours.length) {
+        return res.status(404).json({
+            status: 'Failed',
+            message: 'ID Not Found',
+        });
+    }
+    next();
+};
 exports.getAllTours = (req, res) => {
     res.status(200).json({
         status: 'success',
@@ -17,12 +27,7 @@ exports.getTour = (req, res) => {
     console.log(req.params);
     const id = req.params.id * 1; //NOTE: converts string into number
     const tour = tours.find((el) => el.id === id);
-    if (!tour) {
-        return res.status(404).json({
-            status: 'Failed',
-            message: 'ID not found!',
-        });
-    }
+
     res.status(200).json({
         status: 'success',
         requestedAt: req.requestTime,
@@ -48,12 +53,6 @@ exports.createTour = (req, res) => {
 };
 exports.updateTour = (req, res) => {
     const id = req.params.id * 1;
-    if (id > tours.length) {
-        return res.status(404).json({
-            status: 'Failed',
-            message: 'ID Not Found',
-        });
-    }
 
     res.status(200).json({
         status: 'Success',
@@ -63,13 +62,6 @@ exports.updateTour = (req, res) => {
     });
 };
 exports.deleteTour = (req, res) => {
-    const id = req.params.id * 1;
-    if (id > tours.length) {
-        return res.status(404).json({
-            status: 'Failed',
-            message: 'ID Not Found',
-        });
-    }
     res.status(204).json({
         status: 'Success',
         data: null,
