@@ -1,5 +1,4 @@
 {
-    "singleQuote": true,
-    "lineWidth": 80,
-    "tabWidth": 4
+  "singleQuote": true,
+  "tabwidth": 4
 }
