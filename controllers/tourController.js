@@ -1,12 +1,21 @@
 const Tour = require('../models/tourModel')
 
 
-  // route handlers - tours
+ 
  exports.getAllTours = async (req, res) => {
+
     try{
-      const tours = await Tour.find()
+      
+      // eslint-disable-next-line node/no-unsupported-features/es-syntax
+      const queryObj = {...req.query} 
+      const excludeFields = ['page', 'sort', 'limit', 'fields']
+      excludeFields.forEach(el => delete queryObj[el])
+     
+      const query =  Tour.find(queryObj)
+      const tours = await query
       res.status(200).json({
-        status : 'Success',
+        status : 'Success', 
+        results : tours.length, 
         data : {
           tours
         }
