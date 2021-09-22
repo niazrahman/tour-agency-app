@@ -15,7 +15,14 @@ const Tour = require('../models/tourModel')
      queryStr = queryStr.replace(/\b(gt|gte|lt|lte)\b/g, match => `$${match}`)
      console.log(JSON.parse(queryStr))
 
-      const query =  Tour.find(JSON.parse(queryStr))
+      let query =  Tour.find(JSON.parse(queryStr))
+      if(req.query.sort){
+        const sortBy = req.query.sort.split(',').join(' ')
+        console.log(sortBy)
+        query = query.sort(sortBy)
+      }else{
+        query = query.sort('-createdAt')
+      }
       const tours = await query
       res.status(200).json({
         status : 'Success', 
