@@ -11,7 +11,11 @@ const Tour = require('../models/tourModel')
       const excludeFields = ['page', 'sort', 'limit', 'fields']
       excludeFields.forEach(el => delete queryObj[el])
      
-      const query =  Tour.find(queryObj)
+     let queryStr = JSON.stringify(queryObj)
+     queryStr = queryStr.replace(/\b(gt|gte|lt|lte)\b/g, match => `$${match}`)
+     console.log(JSON.parse(queryStr))
+
+      const query =  Tour.find(JSON.parse(queryStr))
       const tours = await query
       res.status(200).json({
         status : 'Success', 
