@@ -17,6 +17,7 @@ const Tour = require('../models/tourModel')
      console.log(JSON.parse(queryStr))
 
       let query =  Tour.find(JSON.parse(queryStr))
+
       //2.Sort
       if(req.query.sort){
         const sortBy = req.query.sort.split(',').join(' ')
@@ -25,6 +26,7 @@ const Tour = require('../models/tourModel')
       }else{
         query = query.sort('-createdAt')
       }
+
       //3.filter
       if(req.query.fields){
         const fields = req.query.fields.split(',').join(' ')
@@ -32,6 +34,20 @@ const Tour = require('../models/tourModel')
       }else{
         query = query.select('-__v')
       }
+
+      // 4. Pagination
+      const page = req.query.page * 1 || 1
+      const limit = req.query.limit * 1 || 100
+      const skip = (page - 1) * limit
+
+      query = query.skip(skip).limit(limit)
+
+      if(req.query.page){
+        const numTour = await Tour.countDocuments()
+        if(skip >= numTour) throw new Error ('Page Does not Exist')
+      }
+
+
       const tours = await query
       res.status(200).json({
         status : 'Success', 
