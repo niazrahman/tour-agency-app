@@ -170,7 +170,7 @@ exports.getTopFive = (req,res,next) => {
             _id : 0
           }
         },{
-          $sort : {numTourStarts : -1}
+          $sort : {numTourStarts  : -1}
         }
       ])
       res.status(200).json({
