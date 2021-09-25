@@ -1,5 +1,6 @@
 const mongoose = require('mongoose')
 const slugify = require('slugify')
+
 const tourSchema = new mongoose.Schema({
     name : {
       type : String,
@@ -8,6 +9,10 @@ const tourSchema = new mongoose.Schema({
       trim : true
     },
     slug : String,
+    secretTour : {
+      type : Boolean,
+      default : false
+    },
     duration : {
       type : Number,
       required : [true, 'A tour must need a duration']
@@ -68,14 +73,28 @@ const tourSchema = new mongoose.Schema({
     next()
   })
 // eslint-disable-next-line prefer-arrow-callback
-  tourSchema.pre('save',function(next){
-    console.log('Will save document .... ')
+  // tourSchema.pre('save',function(next){
+  //   console.log('Will save document .... ')
+  //   next()
+  // })
+
+ // eslint-disable-next-line prefer-arrow-callback
+  // tourSchema.post('save', function(doc, next){
+  //   console.log(doc)
+  //   next()
+  // })
+
+  // Query Middleware
+  // eslint-disable-next-line prefer-arrow-callback
+  tourSchema.pre(/^find/,function(next){
+    this.find({secretTour : { $ne : true}})
+    this.start =  Date.now()
     next()
   })
-
-  // eslint-disable-next-line prefer-arrow-callback
-  tourSchema.post('save', function(doc, next){
-    console.log(doc)
+ // eslint-disable-next-line prefer-arrow-callback
+  tourSchema.post(/^find/, function(docs,next){
+    console.log(`Query took ${Date.now() - this.start} milisecond`)
+    console.log(docs)
     next()
   })
   const Tour = mongoose.model('Tour',tourSchema)
