@@ -72,17 +72,6 @@ const tourSchema = new mongoose.Schema({
     this.slug = slugify(this.name , { lower:true })
     next()
   })
-// eslint-disable-next-line prefer-arrow-callback
-  // tourSchema.pre('save',function(next){
-  //   console.log('Will save document .... ')
-  //   next()
-  // })
-
- // eslint-disable-next-line prefer-arrow-callback
-  // tourSchema.post('save', function(doc, next){
-  //   console.log(doc)
-  //   next()
-  // })
 
   // Query Middleware
   // eslint-disable-next-line prefer-arrow-callback
@@ -94,7 +83,13 @@ const tourSchema = new mongoose.Schema({
  // eslint-disable-next-line prefer-arrow-callback
   tourSchema.post(/^find/, function(docs,next){
     console.log(`Query took ${Date.now() - this.start} milisecond`)
-    console.log(docs)
+    // console.log(docs)
+    next()
+  })
+
+  // Aggregate middleware
+  tourSchema.pre('aggregate',function(next){
+    this.pipeline().unshift({ $match : { secretTour : {$ne : true} }})
     next()
   })
   const Tour = mongoose.model('Tour',tourSchema)
