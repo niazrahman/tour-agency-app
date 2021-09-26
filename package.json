@@ -2,7 +2,7 @@
   "name": "node-project",
   "version": "1.0.0",
   "description": "",
-  "main": "server.js",
+  "main": "app.js",
   "scripts": {
     "start": "nodemon server.js",
     "start:prod": "set NODE_ENV=production&nodemon server.js"
