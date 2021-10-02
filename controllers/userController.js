@@ -1,11 +1,16 @@
+const User = require('../models/userModel')
+const CatchAsync = require('../utils/catchAsync')
 
+exports.getAllUsers = CatchAsync( async (req,res,next) =>{
+    const users = await User.find()
 
-exports.getAllUsers = (req,res) =>{
-    res.status(500).json({
-        status : 'Failed',
-        message : 'This route is not handled yet...'
+    res.status(200).json({
+        status : 'Success',
+        data : {
+            users
+        }
     })
-}
+})
 
 exports.getUser = (req,res) =>{
     res.status(500).json({
