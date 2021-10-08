@@ -4,6 +4,7 @@ const rateLimit = require('express-rate-limit')
 const helmet = require('helmet')
 const mongoSanitize = require('express-mongo-sanitize')
 const xss = require('xss-clean')
+const hpp = require('hpp')
 // eslint-disable-next-line node/no-unpublished-require
 const morgan = require('morgan')
 
@@ -39,6 +40,11 @@ app.use(mongoSanitize())
 
 // data sanitization against xss attack
 app.use(xss())
+
+// prevent parameter pollution
+app.use(hpp({
+    whitelist : ['duration','ratingsAverage', 'maxGroupSize', 'difficulty','price']
+}))
 
 // serving static file
 app.use(express.static(`${__dirname}/public`))
